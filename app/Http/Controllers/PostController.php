@@ -62,7 +62,7 @@ class PostController extends Controller
                     'images',
                     'videos'
                 ])
-                ->withCount(['comments', 'reactions', 'shares'])  
+                ->withCount(['comments', 'reactions', 'shares'])
                 ->where(function($query) use ($user, $friendIds) {
                     $query->where('privacy', 'PUBLIC')
                           ->orWhere(function ($query) use ($user, $friendIds) {
