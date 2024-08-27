@@ -70,7 +70,7 @@ class ChatController extends Controller
                     ->pluck('conversation_id')
                     ->toArray();
 
-                $conversationIndividual = DB::table('conversations')
+                    $conversationIndividual = DB::table('conversations')
                     ->whereIn('id', $existingConversationIds)
                     ->where('type', 'individual')
                     ->whereExists(function ($query) use ($user) {
@@ -83,14 +83,14 @@ class ChatController extends Controller
 
                 if ($conversationIndividual) {
 
-                    $participants = ConversationParticipant::where('conversation_id', $conversation->id)->with('user')->get();
+                    $participants = ConversationParticipant::where('conversation_id', $conversationIndividual->id)->with('user')->get();
 
                     return responseJson([
                         'conversation' => $conversationIndividual,
                         'conversation_participants' => $participants
                     ], 200, 'Cuộc trò chuyện đã tồn tại');
                 };
-
+            };
 
 
             $conversation = Conversation::create(array_merge(
@@ -651,7 +651,6 @@ class ChatController extends Controller
         ];
 
     }
-
 
 
 
