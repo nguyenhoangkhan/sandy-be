@@ -422,4 +422,6 @@ class UserController extends Controller
             return responseJson(null, 404, 'Người dùng chưa xác thực!');
         }
     }
+
+
 }

@@ -70,7 +70,7 @@ class ChatController extends Controller
                     ->pluck('conversation_id')
                     ->toArray();
 
-                $conversationExists = DB::table('conversations')
+                $conversationIndividual = DB::table('conversations')
                     ->whereIn('id', $existingConversationIds)
                     ->where('type', 'individual')
                     ->whereExists(function ($query) use ($user) {
@@ -79,12 +79,18 @@ class ChatController extends Controller
                             ->where('user_id', $user->id)
                             ->whereRaw('conversation_participants.conversation_id = conversations.id');
                     })
-                    ->exists();
+                    ->first();
 
-                if ($conversationExists) {
-                    return responseJson(null, 400, 'Đoạn chat cá nhân với người này đã được tạo từ trước!');
-                }
-            };
+                if ($conversationIndividual) {
+
+                    $participants = ConversationParticipant::where('conversation_id', $conversation->id)->with('user')->get();
+
+                    return responseJson([
+                        'conversation' => $conversationIndividual,
+                        'conversation_participants' => $participants
+                    ], 200, 'Cuộc trò chuyện đã tồn tại');
+                };
+
 
 
             $conversation = Conversation::create(array_merge(
@@ -645,6 +651,8 @@ class ChatController extends Controller
         ];
 
     }
+
+
 
 
 }
