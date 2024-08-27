@@ -270,6 +270,10 @@ class PostController extends Controller
 
                             if ($originalPost) {
                                 $post->original_post = $originalPost;
+
+                                if($originalPost->background_id){
+                                    $originalPost->background = Background::where('id', $originalPost->background_id)->first();
+                                }
                             }
                         }
                     }
